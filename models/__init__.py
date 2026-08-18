@@ -4,8 +4,7 @@ models/__init__.py
 把models文件夹变成一个方便导入和使用的Python包
 """
 
-from .resnet import ResNet18
-# from models.resnet import ResNet18
+from models.alexnet import AlexNet
 
 
 # 模型工厂：接收模型名称，创建对应模型
