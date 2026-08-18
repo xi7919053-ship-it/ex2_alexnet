@@ -1,5 +1,6 @@
 import time
 import torch
+import os
 
 
 def train_model(
@@ -11,6 +12,8 @@ def train_model(
     device,
     epochs=200
 ):
+
+    os.makedirs("weights", exist_ok=True)
 
     train_losses = []
     train_accuracies = []
