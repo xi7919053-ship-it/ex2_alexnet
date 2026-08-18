@@ -61,20 +61,25 @@ def main():
         weight_decay=5e-4
     )
 
+    scheduler = optim.lr_scheduler.MultiStepLR(
+    optimizer,
+    milestones=[80, 140, 180],
+    gamma=0.1
+    )
 
     # =========================
     # 6. Training
     # =========================
     train_losses, train_accuracies, test_accuracies, epoch_times = train_model(
-        model=model,
-        trainloader=trainloader,
-        testloader=testloader,
-        criterion=criterion,
-        optimizer=optimizer,
-        device=device,
-        epochs=200
+    model=model,
+    trainloader=trainloader,
+    testloader=testloader,
+    criterion=criterion,
+    optimizer=optimizer,
+    scheduler=scheduler,
+    device=device,
+    epochs=200
     )
-
 
 if __name__ == "__main__":
     main()
