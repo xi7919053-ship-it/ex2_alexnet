@@ -9,8 +9,9 @@ def train_model(
     testloader,
     criterion,
     optimizer,
+    scheduler,
     device,
-    epochs=20
+    epochs=2
 ):
 
     os.makedirs("weights", exist_ok=True)
