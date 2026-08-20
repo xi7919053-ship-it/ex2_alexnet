@@ -20,10 +20,8 @@ Training
 * GPU: Tesla T4 (Google Colab)
 
 Results
+* Best Test Accuracy: 85.76%
+* Final Train Accuracy: 99.23%
+* Final Test Accuracy: 85.57%
+* Average Training Time per Epoch: 18.29s
 
-* Best Test Accuracy: TBD
-* Average Training Time per Epoch: TBD
-
-Run
-
-python main.py
