@@ -113,9 +113,12 @@ def train_model(
         # =========================
         # 4. Print
         # =========================
+        current_lr = optimizer.param_groups[0]["lr"]
+        
         print(
             f"Epoch [{epoch + 1}/{epochs}] "
             f"| Time: {epoch_time:.2f}s "
+            f"| LR: {current_lr:.5f} "
             f"| Loss: {train_loss:.4f} "
             f"| Train Acc: {train_acc:.2f}% "
             f"| Test Acc: {test_acc:.2f}%"
