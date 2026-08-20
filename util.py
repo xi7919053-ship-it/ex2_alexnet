@@ -1,35 +1,61 @@
-"""
-util.py —— 显示工具
-训练完成后画出 loss / accuracy 随 epoch 变化的曲线，
-"""
-
-import matplotlib.pyplot as plt
 import os
+import pandas as pd
+import matplotlib.pyplot as plt
 
 
-def plot_history(history, save_dir='outputs'):
-    os.makedirs(save_dir, exist_ok=True)
+def plot_history(csv_path="outputs/training_history.csv"):
 
-    # loss 曲线
+    # 读取训练记录
+    history = pd.read_csv(csv_path)
+
+    os.makedirs("outputs", exist_ok=True)
+
+    # =========================
+    # Loss Curve
+    # =========================
     plt.figure()
-    plt.plot(history['train_loss'], label='train loss')
-    plt.plot(history['test_loss'], label='test loss')
-    plt.xlabel('epoch')
-    plt.ylabel('loss')
-    plt.title('Loss curve')
-    plt.legend()
-    plt.savefig(os.path.join(save_dir, 'loss_curve.png'))
+
+    plt.plot(
+        history["Epoch"],
+        history["Train Loss"]
+    )
+
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.title("Training Loss")
+
+    plt.savefig("outputs/loss_curve.png")
     plt.close()
 
-    # accuracy 曲线
+
+    # =========================
+    # Accuracy Curve
+    # =========================
     plt.figure()
-    plt.plot(history['train_acc'], label='train acc')
-    plt.plot(history['test_acc'], label='test acc')
-    plt.xlabel('epoch')
-    plt.ylabel('accuracy (%)')
-    plt.title('Accuracy curve')
+
+    plt.plot(
+        history["Epoch"],
+        history["Train Accuracy"],
+        label="Train Accuracy"
+    )
+
+    plt.plot(
+        history["Epoch"],
+        history["Test Accuracy"],
+        label="Test Accuracy"
+    )
+
+    plt.xlabel("Epoch")
+    plt.ylabel("Accuracy (%)")
+    plt.title("Training and Test Accuracy")
+
     plt.legend()
-    plt.savefig(os.path.join(save_dir, 'acc_curve.png'))
+
+    plt.savefig("outputs/accuracy_curve.png")
     plt.close()
 
-    print('曲线已保存至 {}/loss_curve.png 和 {}/acc_curve.png'.format(save_dir, save_dir))
+    print("Curves saved to outputs/")
+
+
+if __name__ == "__main__":
+    plot_history()
