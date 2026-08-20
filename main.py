@@ -82,7 +82,7 @@ def main():
     optimizer=optimizer,
     scheduler=scheduler,
     device=device,
-    epochs=2
+    epochs=200
     )
 
     # =========================
