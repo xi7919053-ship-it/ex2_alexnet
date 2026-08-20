@@ -10,7 +10,7 @@ def train_model(
     criterion,
     optimizer,
     device,
-    epochs=200
+    epochs=20
 ):
 
     os.makedirs("weights", exist_ok=True)
@@ -133,7 +133,8 @@ def train_model(
                 "weights/best.pth"
             )
 
-
+    scheduler.step()
+    
     # =========================
     # Average epoch time
     # =========================
