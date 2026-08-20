@@ -134,7 +134,8 @@ def train_model(
                 "weights/best.pth"
             )
 
-    scheduler.step()
+        scheduler.step()
+
     
     # =========================
     # Average epoch time
