@@ -11,7 +11,7 @@ def train_model(
     optimizer,
     scheduler,
     device,
-    epochs=2
+    epochs=200
 ):
 
     os.makedirs("weights", exist_ok=True)
