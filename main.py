@@ -85,5 +85,53 @@ def main():
     epochs=200
     )
 
+    # =========================
+    # 7. Save results
+    # =========================
+    os.makedirs("outputs", exist_ok=True)
+
+    # Save training history
+    with open("outputs/training_history.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+
+        writer.writerow([
+            "Epoch",
+            "Train Loss",
+            "Train Accuracy",
+            "Test Accuracy",
+            "Time"
+        ])
+
+        for i in range(len(train_losses)):
+            writer.writerow([
+                i + 1,
+                train_losses[i],
+                train_accuracies[i],
+                test_accuracies[i],
+                epoch_times[i]
+            ])
+
+    # Loss curve
+    plt.figure()
+    plt.plot(train_losses)
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.title("Training Loss")
+    plt.savefig("outputs/loss_curve.png")
+    plt.close()
+
+    # Accuracy curve
+    plt.figure()
+    plt.plot(train_accuracies, label="Train Accuracy")
+    plt.plot(test_accuracies, label="Test Accuracy")
+    plt.xlabel("Epoch")
+    plt.ylabel("Accuracy (%)")
+    plt.title("Training and Test Accuracy")
+    plt.legend()
+    plt.savefig("outputs/accuracy_curve.png")
+    plt.close()
+
+    print("Training results saved to outputs/")
+
 if __name__ == "__main__":
     main()
