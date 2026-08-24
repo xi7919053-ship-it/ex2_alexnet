@@ -11,33 +11,33 @@ class AlexNet(nn.Module):
 
         self.features = nn.Sequential(
 
-            # Conv1: 1x3x32x32 ->1x64x16x16
+            # 第一层先把尺寸降到 16×16
             nn.Conv2d(3, 64, kernel_size=3, stride=2, padding=1),
             nn.ReLU(inplace=True),
 
-            # MaxPool: 1x64x16x16 -> 1x64x8x8
+            # 池化后变成 64×8×8
             nn.MaxPool2d(kernel_size=2, stride=2),
 
-            # Conv2: 1x64x8x8 -> 1x192x8x8
+            # 第二层增加通道数，图片大小不变
             nn.Conv2d(64, 192, kernel_size=3, padding=1),
             nn.ReLU(inplace=True),
 
-            # MaxPool: 1x192x8x8 -> 1x192x4x4
+            # 再池化到 192×4×4
             nn.MaxPool2d(kernel_size=2, stride=2),
 
-            # Conv3: 1x192x4x4 ->1x384x4x4
+            # 后面三层卷积继续提取特征
             nn.Conv2d(192, 384, kernel_size=3, padding=1),
             nn.ReLU(inplace=True),
 
-            # Conv4: 1x384x4x4 -> 1x256x4x4
+            # 通道数调整为 256
             nn.Conv2d(384, 256, kernel_size=3, padding=1),
             nn.ReLU(inplace=True),
 
-            # Conv5: 1x256x4x4-> 1x256x4x4
+            # 最后一层卷积保持尺寸不变
             nn.Conv2d(256, 256, kernel_size=3, padding=1),
             nn.ReLU(inplace=True),
 
-            # MaxPool: 1x256x4x4 -> 1x256x2x2
+            # 最终得到 256×2×2 的特征图
             nn.MaxPool2d(kernel_size=2, stride=2),
 
         )
@@ -46,7 +46,7 @@ class AlexNet(nn.Module):
 
             nn.Dropout(0.5),
 
-            # Flatten: 256x2x2=1024
+            # 展开后共有 1024 个特征
             nn.Linear(256 * 2 * 2, 4096), 
 
             nn.ReLU(inplace=True),

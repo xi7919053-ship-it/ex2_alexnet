@@ -29,9 +29,7 @@ def train_model(
 
     for epoch in range(start_epoch, epochs):
 
-        # =========================
-        # 1. Training
-        # =========================
+        # 先训练一轮
         model.train()
 
         start_time = time.time()
@@ -45,43 +43,41 @@ def train_model(
             images = images.to(device)
             labels = labels.to(device)
 
-            # 清空上一轮梯度
+            # 每个 batch 开始前先清空梯度
             optimizer.zero_grad()
 
-            # forward
+            # 前向计算
             outputs = model(images)
 
-            # loss
+            # 计算这批数据的损失
             loss = criterion(outputs, labels)
 
-            # backward
+            # 反向传播
             loss.backward()
 
-            # 更新参数
+            # 更新模型参数
             optimizer.step()
 
             running_loss += loss.item()
 
-            # 找出预测类别
+            # 取分数最高的类别
             _, predicted = outputs.max(1)
 
             total += labels.size(0)
 
             correct += predicted.eq(labels).sum().item()
 
-        # 一个 epoch 的平均 loss
+        # 算出这一轮的平均 loss
         train_loss = running_loss / len(trainloader)
 
-        # 一个 epoch 的训练准确率
+        # 这一轮的训练准确率
         train_acc = 100.0 * correct / total
 
-        # 一个 epoch 的训练时间
+        # 记录这一轮用了多久
         epoch_time = time.time() - start_time
 
 
-        # =========================
-        # 2. Testing
-        # =========================
+        # 再用测试集看一下效果
         model.eval()
 
         test_correct = 0
@@ -105,18 +101,14 @@ def train_model(
         test_acc = 100.0 * test_correct / test_total
 
 
-        # =========================
-        # 3. Save results
-        # =========================
+        # 记下这一轮的结果，后面用来画图
         train_losses.append(train_loss)
         train_accuracies.append(train_acc)
         test_accuracies.append(test_acc)
         epoch_times.append(epoch_time)
 
 
-        # =========================
-        # 4. Print
-        # =========================
+        # 在控制台输出训练情况
         current_lr = optimizer.param_groups[0]["lr"]
         
         print(
@@ -129,9 +121,7 @@ def train_model(
         )
 
 
-        # =========================
-        # 5. Save best model
-        # =========================
+        # 测试准确率更高时保存当前模型
         if test_acc > best_acc:
 
             best_acc = test_acc
@@ -141,10 +131,10 @@ def train_model(
             "weights/best.pth"
             )
 
-        # 更新 learning rate
+        # 一轮结束后更新学习率
         scheduler.step()
 
-        # 保存断点，方便下次继续训练
+        # 同时保存完整断点，下次可以接着跑
         torch.save(
         {
             "epoch": epoch + 1,
@@ -157,9 +147,7 @@ def train_model(
         )
 
     
-    # =========================
-    # Average epoch time
-    # =========================
+    # 统计平均每轮训练时间
     if not epoch_times:
         print(f"Training already completed ({start_epoch}/{epochs} epochs).")
         return train_losses, train_accuracies, test_accuracies, epoch_times

@@ -5,14 +5,12 @@ import matplotlib.pyplot as plt
 
 def plot_history(csv_path="outputs/training_history.csv"):
 
-    # 读取训练记录
+    # 从 CSV 读取每一轮的训练结果
     history = pd.read_csv(csv_path)
 
     os.makedirs("outputs", exist_ok=True)
 
-    # =========================
-    # Loss Curve
-    # =========================
+    # 画训练损失曲线
     plt.figure()
 
     plt.plot(
@@ -28,9 +26,7 @@ def plot_history(csv_path="outputs/training_history.csv"):
     plt.close()
 
 
-    # =========================
-    # Accuracy Curve
-    # =========================
+    # 画训练集和测试集准确率曲线
     plt.figure()
 
     plt.plot(

@@ -17,9 +17,7 @@ from train import train_model
 
 def main():
 
-    # =========================
-    # 1. Device
-    # =========================
+    # 先看看当前电脑能用哪个设备
     if torch.cuda.is_available():
         device = torch.device("cuda")
         print("Using CUDA GPU:", torch.cuda.get_device_name(0))
@@ -33,31 +31,23 @@ def main():
         print("Using CPU")
 
 
-    # =========================
-    # 2. Data
-    # =========================
+    # 读取 CIFAR-10 数据
     trainloader, testloader = get_dataloaders(
         batch_size=128
     )
 
 
-    # =========================
-    # 3. Model
-    # =========================
+    # 创建 AlexNet 模型
     model = AlexNet(num_classes=10)
 
     model = model.to(device)
 
 
-    # =========================
-    # 4. Loss
-    # =========================
+    # 分类任务使用交叉熵损失
     criterion = nn.CrossEntropyLoss()
 
 
-    # =========================
-    # 5. Optimizer
-    # =========================
+    # 设置优化器和学习率变化规则
     optimizer = optim.SGD(
         model.parameters(),
         lr=0.01,
@@ -71,9 +61,7 @@ def main():
     gamma=0.1
     )
 
-    # =========================
-    # 6. Load checkpoint
-    # =========================
+    # 如果之前保存过断点，就接着训练
     checkpoint_dir = os.environ.get("ALEXNET_CHECKPOINT_DIR", "weights")
     os.makedirs(checkpoint_dir, exist_ok=True)
 
@@ -116,9 +104,7 @@ def main():
         print("No checkpoint found. Start training from epoch 1.")
 
 
-    # =========================
-    # 7. Training
-    # =========================
+    # 开始训练
 
 
     train_losses, train_accuracies, test_accuracies, epoch_times = train_model(
@@ -135,12 +121,10 @@ def main():
         checkpoint_path=checkpoint_path
     )
 
-    # =========================
-    # 8. Save results
-    # =========================
+    # 把训练记录和曲线保存下来
     os.makedirs("outputs", exist_ok=True)
 
-    # Save training history
+    # 保存每一轮的数据
     with open("outputs/training_history.csv", "w", newline="") as f:
         writer = csv.writer(f)
 
@@ -161,7 +145,7 @@ def main():
                 epoch_times[i]
             ])
 
-    # Loss curve
+    # 画 loss 曲线
     plt.figure()
     plt.plot(train_losses)
     plt.xlabel("Epoch")
@@ -170,7 +154,7 @@ def main():
     plt.savefig("outputs/loss_curve.png")
     plt.close()
 
-    # Accuracy curve
+    # 画准确率曲线
     plt.figure()
     plt.plot(train_accuracies, label="Train Accuracy")
     plt.plot(test_accuracies, label="Test Accuracy")

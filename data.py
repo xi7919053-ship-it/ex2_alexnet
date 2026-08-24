@@ -5,7 +5,7 @@ import torchvision.transforms as transforms
 
 def get_dataloaders(batch_size=128):
 
-    # 训练集的数据增强
+    # 训练集加一点随机变化，减轻过拟合
     train_transform = transforms.Compose([
         transforms.RandomCrop(32, padding=4),
         transforms.RandomHorizontalFlip(),
@@ -16,7 +16,7 @@ def get_dataloaders(batch_size=128):
         )
     ])
 
-    # 测试集不做随机增强
+    # 测试集保持固定，只做归一化
     test_transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize(
@@ -25,7 +25,7 @@ def get_dataloaders(batch_size=128):
         )
     ])
 
-    # CIFAR-10 训练集
+    # 训练数据要打乱顺序
     trainset = torchvision.datasets.CIFAR10(
         root="./data",
         train=True,
@@ -40,7 +40,7 @@ def get_dataloaders(batch_size=128):
         num_workers=2
     )
 
-    # CIFAR-10 测试集
+    # 测试数据不用打乱
     testset = torchvision.datasets.CIFAR10(
         root="./data",
         train=False,
@@ -56,6 +56,5 @@ def get_dataloaders(batch_size=128):
     )
 
     return trainloader, testloader
-
 
 

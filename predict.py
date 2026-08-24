@@ -25,9 +25,7 @@ classes = [
 
 def main():
 
-    # =========================
-    # 1. Device
-    # =========================
+    # 自动选择当前能用的设备
     if torch.cuda.is_available():
         device = torch.device("cuda")
     elif torch.backends.mps.is_available():
@@ -37,9 +35,7 @@ def main():
 
     print("Using device:", device)
 
-    # =========================
-    # 2. Load model
-    # =========================
+    # 加载训练时保存的最佳模型
     model = AlexNet(num_classes=10)
 
     model.load_state_dict(
@@ -52,9 +48,7 @@ def main():
     model = model.to(device)
     model.eval()
 
-    # =========================
-    # 3. Transform
-    # =========================
+    # 预测时的处理要和测试集保持一致
     transform = transforms.Compose([
         transforms.Resize((32, 32)),
         transforms.ToTensor(),
@@ -64,36 +58,31 @@ def main():
         )
     ])
 
-    # =========================
-    # 4. Image folder
-    # =========================
+    # 待预测图片放在 images 文件夹里
     image_folder = "images"
     os.makedirs("outputs", exist_ok=True)
 
-    # 保存结果
+    # 一个列表存表格结果，另一个列表存画图需要的数据
     results = []
     display_images = []
 
-    # 为了显示顺序固定，排序一下
+    # 排序后每次显示的顺序都一样
     filenames = sorted(os.listdir(image_folder))
 
-    # =========================
-    # 5. Predict images
-    # =========================
+    # 逐张预测文件夹里的图片
     for filename in filenames:
 
         if filename.lower().endswith((".jpg", ".jpeg", ".png")):
 
             image_path = os.path.join(image_folder, filename)
 
-            # 从文件名提取真实类别
-            # 例如 cat.jpg -> cat
+            # 文件名就是图片的真实类别，例如 cat.jpg 对应 cat
             true_class = os.path.splitext(filename)[0].lower()
 
-            # 原始图像（用于显示）
+            # 原图留着最后展示
             original_image = Image.open(image_path).convert("RGB")
 
-            # 模型输入图像
+            # 处理成模型需要的输入格式
             image = transform(original_image)
             image = image.unsqueeze(0)   # 3x32x32 -> 1x3x32x32
             image = image.to(device)
@@ -115,7 +104,7 @@ def main():
                 f"Correct = {correct}"
             )
 
-            # 保存到 CSV 的结果
+            # 这一份最后写进 CSV
             results.append([
                 filename,
                 true_class,
@@ -124,7 +113,7 @@ def main():
                 correct
             ])
 
-            # 保存到绘图列表
+            # 这一份用来画预测结果图
             display_images.append({
                 "filename": filename,
                 "image": original_image,
@@ -134,9 +123,7 @@ def main():
                 "correct": correct
             })
 
-    # =========================
-    # 6. Save CSV
-    # =========================
+    # 保存预测结果表
     csv_path = "outputs/predict_results.csv"
 
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
@@ -154,9 +141,7 @@ def main():
 
     print(f"\nPrediction results saved to {csv_path}")
 
-    # =========================
-    # 7. Save result figure
-    # =========================
+    # 把预测结果画出来
     num_images = len(display_images)
 
     if num_images > 0:
@@ -165,7 +150,7 @@ def main():
 
         fig, axes = plt.subplots(rows, cols, figsize=(10, 5 * rows))
 
-        # 如果只有一行或一列，统一转成可迭代形式
+        # 只有一行时 axes 的形状不一样，这里统一处理
         if rows == 1 and cols == 1:
             axes = [[axes]]
         elif rows == 1:
@@ -192,7 +177,7 @@ def main():
                 fontsize=10
             )
 
-        # 多余的子图去掉
+        # 图片数量是奇数时，把最后多出的子图隐藏掉
         for j in range(num_images, len(axes_flat)):
             axes_flat[j].axis("off")
 

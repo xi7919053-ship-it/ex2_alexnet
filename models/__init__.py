@@ -1,15 +1,11 @@
-"""
-models/__init__.py 
-整理这个models文件夹对外提供哪些功能
-把models文件夹变成一个方便导入和使用的Python包
-"""
+"""把模型集中放在这里，导入时会方便一些。"""
 
 from models.alexnet import AlexNet
 
 
-# 模型工厂：接收模型名称，创建对应模型
+# 根据传入的名字创建对应模型
 def model_factory(model_name, num_classes=10):
-    # model_factory('resnet18', 10)
+    # 例如：model_factory('resnet18', 10)
     model_name = model_name.lower()
     if model_name == 'resnet18':
         return ResNet18(num_classes=num_classes)
