@@ -74,7 +74,18 @@ def main():
     # =========================
     # 6. Load checkpoint
     # =========================
-    checkpoint_path = "weights/checkpoint.pth"
+
+    checkpoint_dir = "/content/drive/MyDrive/alexnet_checkpoint"
+
+    os.makedirs(
+        checkpoint_dir,
+        exist_ok=True
+    )
+
+    checkpoint_path = os.path.join(
+        checkpoint_dir,
+        "checkpoint.pth"
+    )
 
     start_epoch = 0
     best_acc = 0.0
