@@ -11,19 +11,23 @@ def train_model(
     optimizer,
     scheduler,
     device,
-    epochs=200
+    epochs=200,
+    start_epoch=0,
+    best_acc=0.0,
+    checkpoint_path="weights/checkpoint.pth",
 ):
 
     os.makedirs("weights", exist_ok=True)
+    checkpoint_dir = os.path.dirname(checkpoint_path)
+    if checkpoint_dir:
+        os.makedirs(checkpoint_dir, exist_ok=True)
 
     train_losses = []
     train_accuracies = []
     test_accuracies = []
     epoch_times = []
 
-    best_acc = 0.0
-
-    for epoch in range(epochs):
+    for epoch in range(start_epoch, epochs):
 
         # =========================
         # 1. Training
@@ -156,6 +160,10 @@ def train_model(
     # =========================
     # Average epoch time
     # =========================
+    if not epoch_times:
+        print(f"Training already completed ({start_epoch}/{epochs} epochs).")
+        return train_losses, train_accuracies, test_accuracies, epoch_times
+
     average_time = sum(epoch_times) / len(epoch_times)
 
     print("\nTraining finished!")

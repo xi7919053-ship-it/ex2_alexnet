@@ -74,7 +74,7 @@ def main():
     # =========================
     # 6. Load checkpoint
     # =========================
-    checkpoint_dir = "/content/drive/MyDrive/alexnet_checkpoint"
+    checkpoint_dir = os.environ.get("ALEXNET_CHECKPOINT_DIR", "weights")
     os.makedirs(checkpoint_dir, exist_ok=True)
 
     checkpoint_path = os.path.join(
@@ -104,8 +104,8 @@ def main():
             checkpoint["scheduler_state_dict"]
         )
 
-        start_epoch = checkpoint["epoch"]
-        best_acc = checkpoint["best_acc"]
+        start_epoch = checkpoint.get("epoch", 0)
+        best_acc = checkpoint.get("best_acc", 0.0)
 
         print(
             f"Checkpoint loaded. "
