@@ -1,0 +1,6 @@
+Image,True Class,Predicted Class,Confidence (%),Correct
+bird.jpeg,bird,airplane,55.76,False
+cat.jpg,cat,cat,85.18,True
+deer.jpeg,deer,frog,83.53,False
+ship.jpeg,ship,ship,100.0,True
+truck.jpeg,truck,truck,100.0,True
