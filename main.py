@@ -72,17 +72,56 @@ def main():
     )
 
     # =========================
-    # 6. Training
+    # 6. Load checkpoint
     # =========================
-    train_losses, train_accuracies, test_accuracies, epoch_times = train_model(
-    model=model,
-    trainloader=trainloader,
-    testloader=testloader,
-    criterion=criterion,
-    optimizer=optimizer,
-    scheduler=scheduler,
-    device=device,
-    epochs=200
+    checkpoint_path = "weights/checkpoint.pth"
+
+    start_epoch = 0
+    best_acc = 0.0
+
+    if os.path.exists(checkpoint_path):
+
+        checkpoint = torch.load(
+            checkpoint_path,
+            map_location=device
+        )
+
+        model.load_state_dict(
+            checkpoint["model_state_dict"]
+        )
+
+        optimizer.load_state_dict(
+            checkpoint["optimizer_state_dict"]
+        )
+
+        scheduler.load_state_dict(
+            checkpoint["scheduler_state_dict"]
+        )
+
+        start_epoch = checkpoint["epoch"]
+        best_acc = checkpoint["best_acc"]
+
+        print(
+            f"Checkpoint loaded. "
+            f"Resume training from epoch {start_epoch + 1}"
+        )
+
+    
+    # =========================
+    # 7. Training
+    # =========================
+        train_losses, train_accuracies, test_accuracies, epoch_times = train_model(
+        model=model,
+        trainloader=trainloader,
+        testloader=testloader,
+        criterion=criterion,
+        optimizer=optimizer,
+        scheduler=scheduler,
+        device=device,
+        epochs=200,
+        start_epoch=start_epoch,
+        best_acc=best_acc,
+        checkpoint_path=checkpoint_path
     )
 
     # =========================
