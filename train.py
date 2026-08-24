@@ -134,10 +134,23 @@ def train_model(
 
             torch.save(
                 model.state_dict(),
-                "weights/best.pth"
+            "weights/best.pth"
             )
 
+        # 更新 learning rate
         scheduler.step()
+
+        # 保存断点，方便下次继续训练
+        torch.save(
+        {
+            "epoch": epoch + 1,
+            "model_state_dict": model.state_dict(),
+            "optimizer_state_dict": optimizer.state_dict(),
+            "scheduler_state_dict": scheduler.state_dict(),
+            "best_acc": best_acc,
+        },
+        checkpoint_path
+        )
 
     
     # =========================
